@@ -18,6 +18,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         WebView webView = new WebView(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
