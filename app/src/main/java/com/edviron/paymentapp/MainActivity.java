@@ -1,15 +1,18 @@
 package com.edviron.paymentapp;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    String collectId = "6865552948afccc2082e7180"; // Replace with actual ID
-    String mode = "production"; // or "production"
+    String collectId = "68655af084927b2f7e35ecdb"; // Make sure this matches the URL's collect_request_id
+    String mode = "sandbox"; // or "production"
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -17,6 +20,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         WebView webView = new WebView(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        webView.setLayoutParams(params);
         setContentView(webView);
 
         if (!mode.equals("production") && !mode.equals("sandbox")) {
@@ -30,7 +38,12 @@ public class MainActivity extends AppCompatActivity {
 
         String paymentUrl = baseUrl + "/collect-sdk-payments?collect_id=" + collectId;
 
-        webView.getSettings().setJavaScriptEnabled(true);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setBuiltInZoomControls(false);
 
         webView.setWebViewClient(new WebViewClient() {
             public void onPageFinished(WebView view, String url) {
@@ -49,8 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void onSuccess() {
         Toast.makeText(this, "Payment Successful", Toast.LENGTH_LONG).show();
-        
-        // You can also finish activity or trigger intent
+        // Optional: finish(); or startActivity(new Intent(...));
     }
 
     private void onFailure() {
