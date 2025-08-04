@@ -1,23 +1,27 @@
 package com.edviron.paymentapp;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    String collectId = "68655af084927b2f7e35ecdb"; // Make sure this matches the URL's collect_request_id
-    String mode = "sandbox"; // or "production"
+    String collectId = "6890da641cfdf371ee20af93"; // Your collect request ID
+    String mode = "production"; // or "sandbox"
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
@@ -49,6 +53,28 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setBuiltInZoomControls(false);
 
         webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.startsWith("upi://") || url.startsWith("paytmmp://") ||
+                        url.startsWith("tez://") || url.startsWith("phonepe://")) {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        Intent chooser = Intent.createChooser(intent, "Pay with UPI");
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(chooser);
+                        } else {
+                            Toast.makeText(MainActivity.this, "No UPI app found", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(MainActivity.this, "Unable to open UPI app", Toast.LENGTH_LONG).show();
+                    }
+                    return true; // Don't load UPI intent in WebView
+                }
+
+                return false; // Let WebView load normal URLs
+            }
+
+            @Override
             public void onPageFinished(WebView view, String url) {
                 if ((url.contains("payment-success") || url.contains("payment-failure")) && url.contains(collectId)) {
                     if (url.contains("payment-success")) {
@@ -64,11 +90,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onSuccess() {
-        Toast.makeText(this, "Payment Successful", Toast.LENGTH_LONG).show();
-        // Optional: finish(); or startActivity(new Intent(...));
+        Toast.makeText(this, "✅ Payment Successful", Toast.LENGTH_LONG).show();
+        // Optional: You can finish or redirect here
+        // finish();
     }
 
     private void onFailure() {
-        Toast.makeText(this, "Payment Failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "❌ Payment Failed", Toast.LENGTH_LONG).show();
     }
 }

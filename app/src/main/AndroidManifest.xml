@@ -3,6 +3,59 @@
     package="com.edviron.paymentapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Package queries for Android 11+ (API 30+) -->
+    <queries>
+        <!-- UPI Intent queries -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="upi" />
+        </intent>
+
+        <!-- Popular UPI apps by package name -->
+        <package android:name="net.one97.paytm" />
+        <package android:name="com.phonepe.app" />
+        <package android:name="com.google.android.apps.nbu.paisa.user" />
+        <package android:name="in.org.npci.upiapp" />
+        <package android:name="com.amazon.mobile.shopping" />
+        <package android:name="com.mobikwik_new" />
+        <package android:name="com.freecharge.android" />
+        <package android:name="com.csam.icici.bank.imobile" />
+        <package android:name="com.axis.mobile" />
+        <package android:name="com.sbi.lotuscorporate" />
+        <package android:name="com.unionbank.ebanking" />
+        <package android:name="com.bankofbaroda.mobilexp" />
+        <package android:name="com.whatsapp" />
+        <package android:name="com.cred.android" />
+        <package android:name="com.bharatpe.merchantapp" />
+        
+        <!-- Generic intent filters for payment apps -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="phonepe" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="paytmmp" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="gpay" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="bhim" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="amazonpay" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="mobikwik" />
+        </intent>
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -15,7 +68,8 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true"> <!-- REQUIRED for Android 12+ -->
+            android:exported="true"
+            android:launchMode="singleTop"> <!-- REQUIRED for Android 12+ -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
